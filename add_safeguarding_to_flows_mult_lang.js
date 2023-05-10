@@ -15,9 +15,10 @@ var obj_keywords_by_cat = JSON.parse(json_string_kw);
 var json_string_fl = fs.readFileSync(input_path_fl).toString();
 var plh_flows = JSON.parse(json_string_fl);
 
-const sg_flow_uuid = "3aa013de-3b69-482c-bbc9-acd8d23bae55";
-const sg_flow_name = "PLH - Safeguarding - WFR interaction";
+const sg_flow_uuid = input_args[3];
+const sg_flow_name = input_args[4];
 
+let log_file = "";
 
 // create strings for case in wft nodes
 var sg_keywords_eng = "";
@@ -83,6 +84,9 @@ plh_flows.flows.forEach(flow => {
 	//console.log(flow.name)
     let wfr_nodes = flow.nodes.filter(node => (node.hasOwnProperty('router') && node.router.operand == "@input.text" && node.router.hasOwnProperty("wait")))
     wfr_nodes.forEach(node => process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl));
+
+    let wfr_nodes_no_cases = flow.nodes.filter(node => (node.hasOwnProperty('router') && node.router.operand == "@input" && node.router.hasOwnProperty("wait")))
+    wfr_nodes_no_cases.forEach(node => process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl, true));
 });
 
 
@@ -114,7 +118,10 @@ split_node.router.cases.forEach(cs => {
 
     } else if (corresp_cat.name == "natural disasters"){
         topic = "Natural Disasters";
-        
+
+    } else if (corresp_cat.name == "drug"){
+        topic = "Drug";
+          
     } else if (corresp_cat.name == "Help"){
         topic = "Help";
         
@@ -142,12 +149,16 @@ fs.writeFile(output_path, new_flows, function (err, result) {
     if (err) console.log('error', err);
 });
 
+let log_file_path = path.join(path.dirname(output_path),"warnings_safeguarding.txt");
+fs.writeFile(log_file_path, log_file, function (err, result) {
+    if (err) console.log('error', err);
+});
 
 
 
 ////////////////////////////////////////////////////////
 
-function process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl, lang_code) {
+function process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl, lang_code, no_cases = false) {
 
     // position of the wfr node
     if (flow.hasOwnProperty("_ui") && flow._ui.nodes.hasOwnProperty(node.uuid)){
@@ -191,6 +202,9 @@ function process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl, lang_
         };
     }
     
+    if (no_cases){
+        node.router.operand = "@input.text";
+    }
 
 
 }
@@ -390,10 +404,14 @@ function get_send_msg_parent_uuid(flow, node_uuid) {
             return parent_nodes[0].uuid;
         } else {
             // if there is only one parent but it's not of type send_msg
+            /*
             console.log("----------------------------------------------")
             console.log("only one parent but not send_msg")
             console.log(flow.name)
             console.log(parent_nodes[0].uuid)
+            */
+            log_file = log_file + "\n----------------------------------------------\n only one parent but not send_msg \n" + flow.name + "\n" + parent_nodes[0].uuid;
+            
 
         }
     } else {
@@ -442,11 +460,13 @@ function get_send_msg_parent_uuid(flow, node_uuid) {
 
                     return mixed_generation_nodes[mixed_generation_nodes.length - 1].uuid
                 } else {
-
+                    /*
                     console.log("----------------------------------------------")
                     console.log("OTHER CASE")
                     console.log(flow.name)
                     console.log(node_uuid)
+                    */
+                    log_file = log_file + "\n----------------------------------------------\nOTHER CASE\n" + flow.name + "\n" + node_uuid;
                 }
             }
 

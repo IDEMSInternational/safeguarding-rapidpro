@@ -6,7 +6,8 @@ HEADER1 = "High-risk key words"
 HEADER2 = "Range of possible misspellings and common slang used by the population"
 # Replace the filename equal to the new file name needed to process.
 #FILENAME = "finalHigh-risk Keywords- Safeguarding_20210608JML.xlsx"
-FILENAME = "./keywords/keywords_excel/philippines/fil_mod2.xlsx"
+#FILENAME = "./keywords/keywords_excel/safeguarding_template_drug.xlsx"
+FILENAME = "./keywords/keywords_excel/safeguarding_template_srh.xlsx"
 
 def read_entries_from_range(xmin, xmax, row1, row2):
 	entries = []
@@ -38,6 +39,7 @@ for sheet in book.worksheets:
 			assert rows[y-1][1].value == HEADER1
 			assert rows[y-1][misspelling_x].value == HEADER2
 			y_start = y+1
+			
 			# We found the table, so stop searching.
 			# Note: We assume there's only one such table per sheet.
 			break
@@ -77,6 +79,7 @@ for sheet in book.worksheets:
 
 
 		# This version removes rows which don't have any entries
+		
 		joint_entry = dict()
 		if high_risk_entries_lang1 or misspelling_entries_lang1:
 			lang1_entry = {
@@ -84,6 +87,11 @@ for sheet in book.worksheets:
 				"mispellings": misspelling_entries_lang1,
 			}
 			joint_entry[lang1] = lang1_entry
+			joint_entry[lang2] = {
+				"keywords": [],
+				"mispellings": [],
+			}
+
 		# Copying the code from above like here is not good style.
 		# TODO: write a function to do this.
 		if high_risk_entries_lang2 or misspelling_entries_lang2:
@@ -93,6 +101,8 @@ for sheet in book.worksheets:
 			}
 			joint_entry[lang2] = lang2_entry
 
+			
+
 		if joint_entry:
 			# only store the entry if at least one of the lists is non-empty
 			table_content.append(joint_entry)
@@ -101,6 +111,7 @@ for sheet in book.worksheets:
 	all_tables[sheet.title] = table_content
 
 #Always change the output name when processing new xlsx file to avoid overwritting.
-with open("./keywords/keywords_json/philippines/single_language/fil.json", "w") as outfile:
+#with open("./keywords/keywords_json/safeguarding_template_drug_2.json", "w") as outfile:
+with open("./keywords/keywords_json/safeguarding_template_srh.json", "w") as outfile:
 	json.dump(all_tables, outfile, indent=4)
 
