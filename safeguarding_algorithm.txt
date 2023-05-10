@@ -1,6 +1,6 @@
 get_send_msg_parent_uuid
 
-find all th eparent nodes:
+find all the parent nodes:
 1 parent_nodes.length == 0 --> return null
 2 parent_nodes.length == 1
     2.1 parent = send_msg --> OK return parent
@@ -12,7 +12,7 @@ find all th eparent nodes:
               --> return the first one or the "sorry I don't understand" if present ????
 
         3.2.2 the parent nodes are of mixed types
-              --> for all the parents that are not of send_msf type
+              --> for all the parents that are not of send_msg type
                   find the first parent --> mixed generation nodes
                   3.2.2.1 all the mixed generation nodes are of type send_msg
                           --> return the first one or the "sorry I don't understand" if present ????
