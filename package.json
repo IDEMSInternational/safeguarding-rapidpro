@@ -12,7 +12,7 @@
     "url": "git+https://github.com/IDEMSInternational/safeguarding-rapidpro.git"
   },
   "author": "IDEMS",
-  "license": "ISC",
+  "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/IDEMSInternational/safeguarding-rapidpro/issues"
   },
