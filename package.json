@@ -1,23 +1,29 @@
 {
-  "name": "safeguarding-rapidpro",
+  "name": "@idems/safeguarding-rapidpro",
   "version": "1.0.0",
-  "description": "",
-  "main": "add_safeguarding_to_flows.js",
+  "description": "Functions to help with safeguarding in RapidPro apps created by IDEMS",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node add_safeguarding_to_flows.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fagiothree/safeguarding-rapidpro.git"
+    "url": "git+https://github.com/IDEMSInternational/safeguarding-rapidpro.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "IDEMS",
+  "license": "GPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/fagiothree/safeguarding-rapidpro/issues"
+    "url": "https://github.com/IDEMSInternational/safeguarding-rapidpro/issues"
   },
-  "homepage": "https://github.com/fagiothree/safeguarding-rapidpro#readme",
+  "homepage": "https://github.com/IDEMSInternational/safeguarding-rapidpro#readme",
   "dependencies": {
     "uuid": "^8.3.2"
-  }
+  },
+  "devDependencies": {},
+  "keywords": [
+    "IDEMS",
+    "safeguarding",
+    "rapidpro"
+  ]
 }
