@@ -5,7 +5,7 @@ let path = require("path")
 
 
 
-let input_args = process.argv.slice(3);
+let input_args = process.argv.slice(2);
 
 let input_path_fl = input_args[0];
 let input_path_kw = input_args[1];
