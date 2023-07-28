@@ -171,17 +171,22 @@ function process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl, lang_
     // generate uuid for the 2 nodes to add
     let enter_flow_node_uuid = uuid.v4();
     let split_node_uuid = uuid.v4();
+    let save_result_node_uuid = uuid.v4();
+
 
     //add category with safeguarding keywords to wfr node
     add_safeguarding_cat(flow, node, enter_flow_node_uuid, sg_keywords_eng, sg_keywords_transl, lang_code);
 
     // generate enter_flow and split node
-    let enter_flow_node = generate_enter_flow_node(enter_flow_node_uuid, split_node_uuid, sg_flow_name, sg_flow_uuid);
+    let enter_flow_node = generate_enter_flow_node(enter_flow_node_uuid, save_result_node_uuid, sg_flow_name, sg_flow_uuid);
+    let save_result_node = generate_save_result_node(save_result_node_uuid,split_node_uuid)
     let split_by_result_node = generate_split_by_result_node(split_node_uuid, send_msg_uuid)
+    
 
     // add nodes to flow
     flow.nodes.push(enter_flow_node)
     flow.nodes.push(split_by_result_node)
+    flow.nodes.push(save_result_node)
 
 
     // position nodes far on the right in the _ui
@@ -199,7 +204,7 @@ function process_wfr_node(node, flow, sg_keywords_eng, sg_keywords_transl, lang_
                 top: node_position.top + 160
             },
             type: "split_by_expression"
-        };
+        }
     }
     
     if (no_cases){
@@ -340,6 +345,36 @@ function generate_enter_flow_node(nodeId, dest_uuid, flow_name, flow_uuid) {
 
     return enter_flow_node
 }
+
+function generate_save_result_node(node_uuid, dest_uuid){
+    let save_result_node = {
+        uuid: node_uuid,
+    }
+
+    let exits = [
+        {
+            destination_uuid: dest_uuid,
+            uuid: uuid.v4()
+        }
+    ];
+
+    save_result_node.exits = exits;
+
+    let actions = [
+        {
+            type: "set_run_result",
+            name: "sg_back",
+            value: "@child.results.sg_back",
+            uuid: uuid.v4()
+        }
+
+    ]
+    save_result_node.actions = actions;
+
+    return save_result_node
+}
+
+
 
 
 function generate_split_by_result_node(node_uuid, dest_uuid) {
