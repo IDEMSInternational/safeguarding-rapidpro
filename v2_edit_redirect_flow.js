@@ -129,7 +129,7 @@ function add_safeguarding_localization(flow,cs,topic){
             flow.localization = {};
         }
         if (!flow.localization.hasOwnProperty(lang_code)){
-            flow.localization.hasOwnProperty(lang_code) = {};
+            flow.localization.lang_code = {};
         }
         let loc_obj = {};
         loc_obj.arguments = [sg_keywords_by_cat_transl[topic][lang_code]];
